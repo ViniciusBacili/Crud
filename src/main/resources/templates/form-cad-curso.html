@@ -1,0 +1,188 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Cadastro de Cursos</title>
+<script th:src="@{/js/jquery-3.4.1.min.js}" type="text/javascript"></script>
+<link rel="stylesheet" href="src/main/resources/static/css/tr.css" type="text/css" />
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		$('#listCategorias').find('option').remove();
+		$.ajax({
+			url : "../rest-categoria", // getContextPath()???
+			type: "get",
+			success: function(response) {
+				$('#listCategorias').append($('<option>', {
+					value: 0,
+					text: 'Selecione a Categoria'
+				}));
+				var d = response._embedded.categorias;
+				for (item in d) {
+					id = d[item].id;
+					desc = d[item].categoria;
+					$('#listCategorias').append($('<option value=' + id + '>' + desc + '</option>'));	
+				}
+			},
+			error: function(e) {
+				// ERROR 
+			}
+		});
+		$('#listCategorias').change(function(v) {
+
+			$('#lista_curso_id tr').remove();
+			$.ajax({
+				url : "../curso/lista?categoria=" + $('#listCategorias').val(), // getContextPath()???
+				type: "get",
+				success: function(response) {
+					
+					var c = response;
+
+					//var x = c.filter(c => c.response._embedded.aGCursoes.categoria == 1);
+					
+					
+					for (item in c) {
+//						console.log(c);	
+						//alert("estou aqui");
+						descCurso = c[item].descricao;
+						id = c[item].id;
+						at = c[item].ativo;
+						qt = c[item].quantidadeTurmas;
+						$('#lista_curso_id').append("<tr value=" + id + "><td>" + descCurso + "</td><td></td><td>" + at + "</td>" +
+								"<td>" + qt + "</td>" + 
+								"<td><button onclick='alterarStatus(" + id + ")' type='submit'>Alterar Status</button></td>" + 
+								"<td><button onclick='redirecionar(" + id + ")'  type='submit' >Criar Turma</button></td>" +
+								"<td><button onclick='redirecionarAluno(" + id + ")'  type='submit' >Matricular Aluno</button></td>" +
+								"<td><button onclick='redirecionarAlunoTurma(" + id + ")'  type='submit' >Inscrever Aluno</button></td>" +
+								"</tr>");
+						}
+
+				},
+				error: function(e) {
+					// ERROR 
+				}
+			});
+			$("button").click(function() {
+			});
+		});
+	});
+	</script>
+
+<script>
+		function alterarStatus(id) {
+				
+			window.location.href = "http://localhost:8080/curso/status?curso=" + id;
+		}
+</script>
+
+
+<script>	
+	
+		function redirecionar(id) {
+			
+			if (at = 1){
+				window.location.href = "http://localhost:8080/turma/cadastro?curso=" + id;
+			}
+			else alert("Esse curso não está ativo");
+		}
+</script>
+
+<script>	
+	
+		function redirecionarAluno(id) {
+			
+			if (at = 1){
+				window.location.href = "http://localhost:8080/aluno/cadastro?curso=" + id;
+			}
+			else alert("Esse curso não está ativo");
+		}
+</script>
+
+<script>	
+	
+		function redirecionarAlunoTurma(id) {
+			
+			if (at = 1){
+				window.location.href = "http://localhost:8080/alunoTurma/cadastro?curso=" + id;
+			}
+			else alert("Esse curso não está ativo");
+		}
+</script>
+
+<script>
+/*
+		$(function(){
+
+			$("#id_desc").submit(function(){
+
+				var isValid = true;
+				$("input[type=text]").each(function() {
+		
+					var element = $(this);
+					if (element.val() == "") { isValid = false; }
+		
+				}); 
+		
+				if(isValid == false){ alert("Todos os campos devem ser preenchidos."); return false;} 
+		
+			}); 
+		}); 
+*/
+</script>
+
+</head>
+
+<body>
+	<form th:object="${curso}" id="id_desc" action="#"
+		th:actions="@{/curso/cadastro}" method="post">
+
+		<select th:field="*{categoria}" id="listCategorias"></select> 
+		<input type="text" th:field="*{descricao}" placeholder="Preencha o nome do curso" required="required">
+		
+		<button type="submit">Cadastrar</button>
+		<input type="text" name="filtrar" id="search" placeholder="Procure pelo Curso">
+		<input type="hidden" th:field="*{ativo}">
+	</form>
+	<table id="id_lista_curso">
+		<thead>
+			<tr>
+				<th>Curso</th>
+				<th>Status</th>
+				<th>Qtd Turmas</th>
+			</tr>
+		</thead>
+		<tbody id="lista_curso_id">
+			<tr>
+				<td id="id_teste"></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
+
+
+<script>
+	var campoFiltro = document.querySelector("#search");
+	campoFiltro.addEventListener("input", function(){
+	    
+	    $('#lista_curso_id tr').each(function(index, value) {
+	   	($(value).find('td:eq(0)').text()).toUpperCase();
+	    
+	    	if($(value).find('td:eq(0)').text().includes($('#search').val().toUpperCase())) {
+	    	
+	    		$(value).show()
+	    	} else {
+	    	
+	    		$(value).hide();
+	    	}
+	    });
+	   
+	});
+</script>

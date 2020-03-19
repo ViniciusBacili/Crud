@@ -1,0 +1,65 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Cadastro de Cursos</title>
+<script th:src="@{/js/jquery-3.4.1.min.js}" type="text/javascript"></script>
+<link rel="stylesheet" href="src/main/resources/static/css/tr.css" type="text/css" />
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		
+		$('#listTurmas').find('option').remove();
+		$.ajax({
+			url : "../rest-turma", // getContextPath()???
+			type: "get",
+			success: function(response) {
+				$('#listTurmas').append($('<option>', {
+					value: 0,
+					text: 'Selecione a Turma'
+				}));
+				var d = response._embedded.aGTurmas;
+				for (item in d) {
+					id = d[item].id;
+					dataInicio = d[item].dataInicio;
+					dataFim = d[item].dataFim;
+					$('#listTurmas').append($('<option value=' + id + '>' + dataInicio + dataFim + '</option>'));	
+				}
+			},
+			error: function(e) {
+				// ERROR 
+			}
+		});
+	});
+
+	</script>
+
+</head>
+		<form th:object="${alunoTurma}" id="id_alunoTurma" action="#"
+			th:actions="@{/alunoTurma/cadastro}" method="post">
+			<select th:field="*{turma}">
+    			<option th:each="i : ${turmas}" th:value="${i.id}" th:text="${#dates.format(i.dataInicio, 'dd-MM-yyyy')}"></option>
+			</select>
+			<input type="text" th:field="*{aluno}"
+					placeholder="Preencha o CPF do Aluno" required="required">
+			<button type="submit">Matricular o Aluno</button>
+		</form>
+		
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</html>

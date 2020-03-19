@@ -1,0 +1,67 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Cadastro de Cursos</title>
+<script th:src="@{/js/jquery-3.4.1.min.js}" type="text/javascript"></script>
+<link rel="stylesheet" href="src/main/resources/static/css/tr.css" type="text/css" />
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		
+		$('#listTurmas').find('option').remove();
+		$.ajax({
+			url : "../rest-turma", // getContextPath()???
+			type: "get",
+			success: function(response) {
+				$('#listTurmas').append($('<option>', {
+					value: 0,
+					text: 'Selecione a Turma'
+				}));
+				var d = response._embedded.aGTurmas;
+				for (item in d) {
+					id = d[item].id;
+					dataInicio = d[item].dataInicio;
+					dataFim = d[item].dataFim;
+					$('#listTurmas').append($('<option value=' + id + '>' + dataInicio + dataFim + '</option>'));	
+				}
+			},
+			error: function(e) {
+				// ERROR 
+			}
+		});
+	});
+
+	</script>
+
+</head>
+
+	<body>
+		<form th:object="${aluno}" id="id_alunos" action="#"
+			th:actions="@{/aluno/cadastro}" method="post">
+			<input type="text" th:field="*{cpf}"
+					placeholder="Preencha o CPF do Aluno" required="required">
+			<input type="text" th:field="*{nome}"
+					placeholder="Preencha o nome do Aluno" required="required">
+			<button type="submit">Cadastrar Aluno</button>
+		</form>
+
+		<table id="id_lista_aluno">
+			<thead>
+				<tr>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+	</html>

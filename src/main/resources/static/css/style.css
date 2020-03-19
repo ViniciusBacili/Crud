@@ -1,0 +1,27 @@
+@font-face {
+font-family: 'sapico';
+    src: url('../font/SAP-icons.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+[class*=" icon-"]:before {
+    font-family: 'sapico';
+    font-style: normal;
+    speak: none;
+    font-weight: normal;
+    -webkit-font-smoothing: antialiased;
+            font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+.icon-navigation-left-arrow:before {
+    content: "\e067";
+}
+.icon-slim-arrow-left:before {
+    content: "\e1ee";
+}
+.icon-navigation-right-arrow:before {
+    content: "\e066";
+}
+.icon-slim-arrow-right:before {
+    content: "\e1ed";
+}

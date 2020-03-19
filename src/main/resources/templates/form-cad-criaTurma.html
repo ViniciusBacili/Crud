@@ -1,0 +1,54 @@
+	<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	<meta charset="ISO-8859-1">
+	<title>Cadastro de Turmas</title>
+	<script th:src="@{/js/jquery-3.4.1.min.js}" type="text/javascript"></script>
+	</head>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>Calendário jQuery</title>    
+	</head>
+	<script>
+		$(function(){
+
+			$("#id_turma").submit(function(){
+
+				var isValid = true;
+				$("input[type=date]").each(function() {
+		
+					var element = $(this);
+					if (element.val() == "") { isValid = false; }
+		
+				}); 
+		
+				if(isValid == false){ alert("Todos os campos devem ser preenchidos."); return false;} 
+		
+			}); 
+		}); 
+		
+		
+</script>
+
+	<body>
+		<form th:object="${turma}" id="id_turma" action="#"
+			th:actions="@{/turma/cadastro}" method="post">
+			<p>Data de Inicio: <input type="date" id="dataInicio" th:field="*{dataInicio}"/></p>
+			<p>Data de Fim: <input type="date" id="dataFim" th:field="*{dataFim}"/></p>
+			<button type="submit">Cadastrar</button>
+		</form>
+		<table>
+			<tfoot>
+			<tbody id="lista_turmas_id">
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+			</tfoot>
+		</table>
+	</body>
+	</html>
